@@ -18,7 +18,24 @@ set :default_stage, "staging"
 server "ec2-204-236-156-83.us-west-1.compute.amazonaws.com", :app, :web, :db, :primary => true
 set :deploy_to, "/var/www/document_app"
 
-ssh_options[:keys] = ["/AWS-Keys/capDeployTest.pem"]
+ssh_options[:keys] = ["/AWS-Keys/capDeployTest.pem", "/Users/rgarbi/.ssh/id_rsa"]
+
+after 'deploy:update_code', 'deploy:symlink_db'
+
+
+namespace :deploy do
+
+desc "Restart Application"
+task :restart, :roles => :app do
+run "touch #{deploy_to}/#{shared_dir}/tmp/restart.txt"
+end
+
+desc "Symlinks the database.yml"
+task :symlink_db, :roles => :app do
+run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
+end
+
+end
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
