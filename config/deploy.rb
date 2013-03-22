@@ -11,10 +11,6 @@ set :scm, "git"
 
 set :user, "ubuntu"
 
-
-set :stages, ["staging", "production"]
-set :default_stage, "production"
-
 server "ec2-54-241-48-49.us-west-1.compute.amazonaws.com", :app, :web, :db, :primary => true
 set :deploy_to, "/home/ubuntu/deploy/document_app"
 
